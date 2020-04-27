@@ -34,24 +34,18 @@ sequencial = 48647647
 solution1  = 57424346
 solution2  = 59817438
 
-pop_size = 100  trials = 500
-threads = 2
-sequencial = 344352072
-solution1  = 248701367
-solution2  = 344352072
- 
 ---- trials = 250 ----
 threads = 2
-sequencial =
-solution1 ==
-solution2 ==
+sequencial = 174836083
+solution1 == 127138241
+solution2 == 117312074
 
 threads = 4
-sequencial =
-solution1 ==
-solution2 ==
+sequencial = 
+solution1 == 113993410
+solution2 == 112865763
 
 threads = 8
 sequencial =
-solution1 ==
-solution2 ==
+solution1 == 129412841
+solution2 == 128204950
