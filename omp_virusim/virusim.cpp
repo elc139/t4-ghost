@@ -41,8 +41,8 @@ main(int argc, char* argv[])
 {
    
    // parâmetros dos experimentos
-   int population_size = 30;
-   int n_trials = 1000;
+   int population_size = 100;
+   int n_trials = 250;
    int n_probs = 101;
 
    double* percent_infected; // percentuais de infectados (saída)
@@ -75,11 +75,9 @@ main(int argc, char* argv[])
          
          Population* population = NULL;
          // executa vários experimentos para esta probabilidade
-#pragma omp parallel for schedule(static) private(population)
+#pragma omp parallel for schedule(dynamic) private(population)
          for (int it = 0; it < n_trials; it++) {
             population = new Population(population_size);
-
-            // queima floresta até o fogo apagar
             population->propagateUntilOut(population->centralPerson(), prob_spread[ip], rand);
 #pragma omp critical
             {

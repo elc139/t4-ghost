@@ -1,0 +1,57 @@
+pop_size = 10
+threads = 2
+sequencial = 747712
+solution1  = 1315710
+solution2  = 1394531
+
+pop_size = 10
+threads = 4
+sequencial = 734193
+solution1  = 1290615
+solution2  = 1222055
+
+pop_size = 10
+threads = 8
+sequencial = 777208
+solution1  = 1693743
+solution2  = 1670680
+
+pop_size = 50
+threads = 2
+sequencial = 48290504
+solution1  = 38752963
+solution2  = 37794081
+
+pop_size = 50
+threads = 4
+sequencial = 48647647
+solution1  = 45964727
+solution2  = 45246575
+
+pop_size = 50
+threads = 8
+sequencial = 48647647
+solution1  = 57424346
+solution2  = 59817438
+
+pop_size = 100  trials = 500
+threads = 2
+sequencial = 344352072
+solution1  = 248701367
+solution2  = 344352072
+ 
+---- trials = 250 ----
+threads = 2
+sequencial =
+solution1 ==
+solution2 ==
+
+threads = 4
+sequencial =
+solution1 ==
+solution2 ==
+
+threads = 8
+sequencial =
+solution1 ==
+solution2 ==

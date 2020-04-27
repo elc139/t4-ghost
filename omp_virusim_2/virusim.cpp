@@ -4,14 +4,15 @@
 //
 // Uso: virusim <tamanho-da-populacao> <nro. experimentos> <probab. maxima> 
 
-// Original: 121277768
-
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <omp.h>
 #include <sys/time.h>
 #include "Random.h"
 #include "Population.h"
+
+int OMP_NUM_THREADS = 8;
 
 void
 checkCommandLine(int argc, char** argv, int& size, int& trials, int& probs)
@@ -34,10 +35,10 @@ long wtime()
     return t.tv_sec*1000000 + t.tv_usec;
 }
 
+
 int 
 main(int argc, char* argv[]) 
 {
-   
    // parâmetros dos experimentos
    int population_size = 100;
    int n_trials = 250;
@@ -52,31 +53,37 @@ main(int argc, char* argv[])
    long start_time, end_time;
 
    checkCommandLine(argc, argv, population_size, n_trials, n_probs);
-    
+
+   omp_set_num_threads(OMP_NUM_THREADS);
+
    try {
       start_time = wtime();
-      Population* population = new Population(population_size);
+         
       Random rand;
+      Population** population = new Population*[OMP_NUM_THREADS];
+      for(int i=0; i < OMP_NUM_THREADS; i++) {
+         population[i] = new Population(population_size);
+      }
 
       prob_spread = new double[n_probs];
       percent_infected = new double[n_probs];
-
       prob_step = (prob_max - prob_min)/(double)(n_probs-1);
 
       printf("Probabilidade, Percentual Infectado\n");
 
-      // para cada probabilidade, calcula o percentual de pessoas infectadas
+      // para cada probabilidade, calcula o percentual de pessoas infectadas      
+#pragma omp parallel for schedule(dynamic)
       for (int ip = 0; ip < n_probs; ip++) {
+         int current_thread = omp_get_thread_num();
 
          prob_spread[ip] = prob_min + (double) ip * prob_step;
          percent_infected[ip] = 0.0;
          rand.setSeed(base_seed+ip); // nova seqüência de números aleatórios
-
+         
          // executa vários experimentos para esta probabilidade
          for (int it = 0; it < n_trials; it++) {
-            // queima floresta até o fogo apagar
-            population->propagateUntilOut(population->centralPerson(), prob_spread[ip], rand);
-            percent_infected[ip] += population->getPercentInfected();
+            population[current_thread]->propagateUntilOut(population[current_thread]->centralPerson(), prob_spread[ip], rand);
+            percent_infected[ip] += population[current_thread]->getPercentInfected();
          }
 
          // calcula média dos percentuais de árvores queimadas
@@ -90,7 +97,7 @@ main(int argc, char* argv[])
       delete[] percent_infected;
       end_time = wtime();
 
-      std::cout << "Original: " << (long) (end_time - start_time) << std::endl;
+      std::cout << OMP_NUM_THREADS << " Threads: " << (long) (end_time - start_time) << std::endl;
    }
    catch (std::bad_alloc)
    {
